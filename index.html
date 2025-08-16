@@ -167,7 +167,9 @@
             <p class="mt-4 text-base md:text-lg text-gray-600">Elige las secciones que quieres incluir y completa la información.</p>
         </header>
 
-        <form id="requirementsForm" class="space-y-8">
+        <!-- INICIO DE LA MODIFICACIÓN: Formulario apunta a Formspree -->
+        <form id="requirementsForm" class="space-y-8" action="https://formspree.io/f/TU_ID_UNICO_AQUI" method="POST">
+            <!-- FIN DE LA MODIFICACIÓN -->
 
             <section class="p-6 md:p-8 rounded-2xl glass-morphism form-section">
                 <h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 flex items-center text-gray-800">
@@ -175,7 +177,6 @@
                     Selección de Módulos
                 </h2>
                 
-                <!-- INICIO DE LA MODIFICACIÓN: Toggle de Estructura Recomendada -->
                 <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-4 rounded-r-lg mb-6 flex justify-between items-center">
                     <div>
                         <p class="font-bold">Usar Estructura Recomendada</p>
@@ -186,7 +187,6 @@
                         <span class="slider"></span>
                     </label>
                 </div>
-                <!-- FIN DE LA MODIFICACIÓN -->
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="moduleSelector">
                     <!-- Módulos se insertan aquí -->
@@ -206,35 +206,41 @@
                 <div class="bg-green-50 border-l-4 border-green-400 text-green-800 p-4 rounded-r-lg">
                     <p class="font-bold">Instrucciones Finales</p>
                     <p class="mt-2 text-sm">Para enviarme tus archivos (logo, fotos, video), utiliza el siguiente enlace seguro. Se abrirá un formulario donde podrás subirlos directamente a mi Google Drive.</p>
-                    <a href="https://drive.google.com/drive/folders/1UyFbNW71LQ2rWQK4NKjwu0TUxWRfkBnr?usp=drive_link" target="_blank" class="mt-4 inline-block bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
+                    <a href="https://forms.gle/TU_ENLACE_AQUI" target="_blank" class="mt-4 inline-block bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
                         Subir Archivos
                     </a>
                 </div>
             </section>
+            
+            <!-- INICIO DE LA MODIFICACIÓN: Campo oculto para el resumen -->
+            <textarea name="summary" id="summaryHidden" class="hidden"></textarea>
+            <!-- FIN DE LA MODIFICACIÓN -->
 
             <div class="text-center pt-6">
-                <button type="button" id="generateSummaryBtn" class="text-white font-bold py-4 px-10 rounded-full btn-primary text-lg shadow-lg">
-                    Generar Resumen
+                <!-- INICIO DE LA MODIFICACIÓN: Botón de tipo 'submit' -->
+                <button type="submit" id="generateSummaryBtn" class="text-white font-bold py-4 px-10 rounded-full btn-primary text-lg shadow-lg">
+                    Enviar Contenidos
                 </button>
+                <!-- FIN DE LA MODIFICACIÓN -->
             </div>
         </form>
+        
+        <!-- INICIO DE LA MODIFICACIÓN: Sección para configurar Formspree -->
+        <section class="mt-12 text-center text-sm text-gray-500 p-4 border-t">
+            <h3 class="font-semibold text-gray-600">Nota para el desarrollador:</h3>
+            <p>Para recibir los envíos de este formulario, crea una cuenta en <a href="https://formspree.io/" target="_blank" class="text-blue-600 underline">Formspree</a>, crea un nuevo formulario y reemplaza `TU_ID_UNICO_AQUI` en la etiqueta `<form>` con tu endpoint único.</p>
+        </section>
+        <!-- FIN DE LA MODIFICACIÓN -->
     </div>
 
     <div id="summaryModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50 modal-backdrop">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col glass-morphism">
-            <div class="p-6 border-b flex justify-between items-center">
-                <h2 class="text-2xl font-bold gradient-text">Resumen de Contenidos</h2>
-                <button id="closeModalBtn" class="text-gray-500 hover:text-gray-800 text-3xl">&times;</button>
-            </div>
-            <div class="p-6 overflow-y-auto">
-                <p class="mb-4 text-gray-600">Copia este resumen y pégalo en el correo que me enviarás.</p>
-                <textarea id="summaryText" class="w-full h-96 p-4 border-2 border-gray-200 rounded-lg bg-gray-50 font-mono text-sm custom-input" readonly></textarea>
-            </div>
-            <div class="p-6 border-t text-right">
-                 <button id="copyBtn" class="text-white font-bold py-3 px-6 rounded-full btn-primary">
-                    Copiar Resumen
-                </button>
-            </div>
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl flex flex-col glass-morphism text-center p-8">
+            <h2 class="text-3xl font-bold gradient-text">¡Información Enviada!</h2>
+            <p class="mt-4 text-gray-600">Gracias por completar la guía. He recibido tus respuestas y me pondré en contacto contigo en breve si necesito alguna aclaración.</p>
+            <p class="mt-2 text-gray-600">No olvides subir tus archivos gráficos usando el enlace proporcionado.</p>
+            <button id="closeModalBtn" class="mt-8 w-full text-white font-bold py-3 px-6 rounded-full btn-primary">
+                Cerrar
+            </button>
         </div>
     </div>
 
@@ -265,7 +271,7 @@
                 testimonials: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Testimonios</h2><textarea id="testimonialsText" class="w-full p-3 rounded-lg custom-input" placeholder="Formato: [Nombre]: [Testimonio]"></textarea>`,
                 eventDetails: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Detalles del Evento</h2><div class="space-y-6"><div><label for="eventPlatform">Plataforma</label><input type="text" id="eventPlatform" placeholder="Ej: Zoom, YouTube Live" class="w-full p-3 rounded-lg custom-input"></div><div><label for="eventLink">Enlace de Acceso</label><input type="url" id="eventLink" class="w-full p-3 rounded-lg custom-input"></div><div><label for="limitedSpots">Cupos Limitados (Opcional)</label><input type="number" id="limitedSpots" placeholder="Ej: 100" class="w-full p-3 rounded-lg custom-input"></div></div>`,
                 countdown: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Contador Regresivo</h2><input type="text" id="classDate" placeholder="Ej: 28 de agosto a las 8:00 PM (GMT-6)" class="w-full p-3 rounded-lg custom-input">`,
-                video: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Video</h2><p class="text-sm text-gray-600">Por favor, sube el video en la sección "Entrega de Material Gráfico".</p>`,
+                video: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Video</h2><p class="text-sm text-gray-600">Por favor, sube el video usando el enlace en la sección "Entrega de Material Gráfico".</p>`,
                 audience: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">¿Para Quién es?</h2><textarea id="audienceText" class="w-full p-3 rounded-lg custom-input" placeholder="Describe a tu alumno ideal."></textarea>`,
                 topics: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Temario</h2><textarea id="topicsText" class="w-full p-3 rounded-lg custom-input" placeholder="Lista los temas que cubrirás."></textarea>`,
                 bonus: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Bonus</h2><textarea id="bonusText" class="w-full p-3 rounded-lg custom-input" placeholder="Describe los bonus que ofreces."></textarea>`,
@@ -363,42 +369,17 @@
             }
             
             applyRecommendedStructure(true);
-            // Resto del script (progreso, resumen, modal) sin cambios...
-                  const form = document.getElementById('requirementsForm');
-            const progressBar = document.getElementById('progressBar');
-            const allInputs = form.querySelectorAll('input[type="text"], input[type="url"], input[type="number"], textarea, input[type="file"]');
             
-            const updateProgress = () => {
-                let filledInputs = 0;
-                const visibleInputs = Array.from(allInputs).filter(input => {
-                     const sectionContainer = input.closest('.section-content');
-                     if (!sectionContainer) return true;
-                     const toggle = sectionContainer.previousElementSibling;
-                     return !toggle || toggle.checked;
-                });
-                
-                visibleInputs.forEach(input => {
-                    if (input.value.trim() !== '') filledInputs++;
-                });
-
-                const progress = visibleInputs.length > 0 ? (filledInputs / visibleInputs.length) * 100 : 0;
-                progressBar.style.width = `${progress}%`;
-            };
-
-            form.addEventListener('input', updateProgress);
-            moduleSelector.addEventListener('change', updateProgress);
-            
-            const generateBtn = document.getElementById('generateSummaryBtn');
+            const form = document.getElementById('requirementsForm');
+            const summaryHidden = document.getElementById('summaryHidden');
             const modal = document.getElementById('summaryModal');
             const closeModalBtn = document.getElementById('closeModalBtn');
-            const summaryText = document.getElementById('summaryText');
-            const copyBtn = document.getElementById('copyBtn');
 
-            generateBtn.addEventListener('click', () => {
-                let summary = '### RESUMEN DE CONTENIDOS PARA FUNNEL ###\n\n';
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
                 
+                let summary = '### RESUMEN DE CONTENIDOS PARA FUNNEL ###\n\n';
                 const selectedModules = Array.from(moduleSelector.querySelectorAll('input:checked')).map(cb => cb.id.replace('toggle-', ''));
-
                 summary += `MÓDULOS SELECCIONADOS: ${selectedModules.join(', ')}\n\n`;
 
                 modules.forEach(module => {
@@ -406,48 +387,46 @@
                         summary += `--- ${module.name.toUpperCase()} ---\n`;
                         const section = document.getElementById(`container-${module.id}`);
                         section.querySelectorAll('input, textarea').forEach(el => {
-                            if (el.id) {
-                                const value = el.type === 'file' ? el.files[0]?.name : el.value.trim();
-                                if (value) {
-                                    const label = document.querySelector(`label[for='${el.id}']`)?.textContent || el.placeholder;
-                                    summary += `${label}: ${value}\n`;
-                                }
+                            if (el.id && el.type !== 'checkbox' && el.value.trim()) {
+                                const label = document.querySelector(`label[for='${el.id}']`)?.textContent || el.placeholder;
+                                summary += `${label}: ${el.value.trim()}\n`;
                             }
                         });
-                        // Capturar redes sociales dinámicas
                         if (module.id === 'socials') {
                             section.querySelectorAll('.social-link').forEach((link, index) => {
-                                if (link.value.trim()) {
-                                    summary += `Red Social ${index + 1}: ${link.value.trim()}\n`;
-                                }
+                                if (link.value.trim()) summary += `Red Social ${index + 1}: ${link.value.trim()}\n`;
                             });
                         }
                         summary += '\n';
                     }
                 });
+                
+                summaryHidden.value = summary;
 
-                summaryText.value = summary;
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
+                const formData = new FormData(form);
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                }).then(response => {
+                    if (response.ok) {
+                        modal.classList.remove('hidden');
+                        modal.classList.add('flex');
+                        form.reset();
+                        applyRecommendedStructure(true);
+                    } else {
+                        alert('Hubo un error al enviar el formulario. Por favor, inténtalo de nuevo.');
+                    }
+                }).catch(error => {
+                    alert('Hubo un error de red. Por favor, revisa tu conexión.');
+                });
             });
             
             closeModalBtn.addEventListener('click', () => {
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
             });
-
-            copyBtn.addEventListener('click', () => {
-                summaryText.select();
-                try {
-                    document.execCommand('copy');
-                    copyBtn.textContent = '¡Copiado!';
-                    setTimeout(() => { copyBtn.textContent = 'Copiar al Portapapeles'; }, 2000);
-                } catch (err) {
-                    copyBtn.textContent = 'Error al copiar';
-                }
-            });
         });
-        
     </script>
 </body>
 </html>
