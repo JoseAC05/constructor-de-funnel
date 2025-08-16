@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constructor de Contenidos para Funnel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #0ea5e9;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e8ff 100%);
+        }
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 45px rgba(37, 99, 235, 0.1);
+        }
+        .form-section {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .gradient-text {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .custom-input {
+            transition: all 0.3s ease;
+            border: 2px solid #e5e7eb;
+            background: #f9fafb;
+        }
+        .custom-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+        .module-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .module-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.1);
+        }
+        .module-card.selected {
+            border-color: var(--primary);
+            background: #eff6ff;
+            color: var(--primary-dark);
+        }
+        .module-card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f3f4f6;
+        }
+        .progress-bar-fill {
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        .section-toggle:checked ~ .section-content {
+            max-height: 1500px;
+            margin-top: 1.5rem;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+        }
+        .custom-checkbox {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #cbd5e1;
+            border-radius: 6px;
+            position: relative;
+            background: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .custom-checkbox:checked {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+        .custom-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 28px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="fixed top-0 left-0 w-full h-2 bg-gray-200 z-50">
+        <div id="progressBar" class="h-full progress-bar-fill" style="width: 0%;"></div>
+    </div>
+
+    <div class="container mx-auto p-4 md:p-8 max-w-4xl mt-8">
+
+        <header class="text-center mb-12">
+            <h1 class="text-3xl md:text-5xl font-bold gradient-text">Constructor de Contenidos para tu Funnel</h1>
+            <p class="mt-4 text-base md:text-lg text-gray-600">Elige las secciones que quieres incluir y completa la información.</p>
+        </header>
+
+        <form id="requirementsForm" class="space-y-8">
+
+            <section class="p-6 md:p-8 rounded-2xl glass-morphism form-section">
+                <h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 flex items-center text-gray-800">
+                    <svg class="w-6 h-6 mr-3 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    Selección de Módulos
+                </h2>
+                
+                <!-- INICIO DE LA MODIFICACIÓN: Toggle de Estructura Recomendada -->
+                <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-4 rounded-r-lg mb-6 flex justify-between items-center">
+                    <div>
+                        <p class="font-bold">Usar Estructura Recomendada</p>
+                        <p class="text-sm">Activa esta opción para usar una selección optimizada de módulos.</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="recommendedStructureToggle" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <!-- FIN DE LA MODIFICACIÓN -->
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="moduleSelector">
+                    <!-- Módulos se insertan aquí -->
+                </div>
+                <div id="moduleFeedback" class="mt-6"></div>
+            </section>
+
+            <div class="space-y-8" id="formSections">
+                <!-- Secciones del formulario se insertan aquí -->
+            </div>
+            
+            <section class="p-6 md:p-8 rounded-2xl glass-morphism form-section">
+                <h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 flex items-center text-gray-800">
+                    <svg class="w-6 h-6 mr-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                    Entrega de Material Gráfico
+                </h2>
+                <div class="bg-green-50 border-l-4 border-green-400 text-green-800 p-4 rounded-r-lg">
+                    <p class="font-bold">Instrucciones Finales</p>
+                    <p class="mt-2 text-sm">Para enviarme tus archivos (logo, fotos, video), utiliza el siguiente enlace seguro. Se abrirá un formulario donde podrás subirlos directamente a mi Google Drive.</p>
+                    <a href="https://drive.google.com/drive/folders/1UyFbNW71LQ2rWQK4NKjwu0TUxWRfkBnr?usp=drive_link" target="_blank" class="mt-4 inline-block bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
+                        Subir Archivos
+                    </a>
+                </div>
+            </section>
+
+            <div class="text-center pt-6">
+                <button type="button" id="generateSummaryBtn" class="text-white font-bold py-4 px-10 rounded-full btn-primary text-lg shadow-lg">
+                    Generar Resumen
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div id="summaryModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50 modal-backdrop">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col glass-morphism">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h2 class="text-2xl font-bold gradient-text">Resumen de Contenidos</h2>
+                <button id="closeModalBtn" class="text-gray-500 hover:text-gray-800 text-3xl">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto">
+                <p class="mb-4 text-gray-600">Copia este resumen y pégalo en el correo que me enviarás.</p>
+                <textarea id="summaryText" class="w-full h-96 p-4 border-2 border-gray-200 rounded-lg bg-gray-50 font-mono text-sm custom-input" readonly></textarea>
+            </div>
+            <div class="p-6 border-t text-right">
+                 <button id="copyBtn" class="text-white font-bold py-3 px-6 rounded-full btn-primary">
+                    Copiar Resumen
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const modules = [
+                { id: 'mainContent', name: 'Contenido Principal' }, { id: 'instructor', name: 'Sobre el Instructor' },
+                { id: 'socials', name: 'Redes Sociales' }, { id: 'testimonials', name: 'Testimonios' },
+                { id: 'eventDetails', name: 'Detalles del Evento' }, { id: 'countdown', name: 'Contador' },
+                { id: 'video', name: 'Video' }, { id: 'audience', name: 'Para Quién Es' },
+                { id: 'topics', name: 'Temario' }, { id: 'bonus', name: 'Bonus' },
+                { id: 'requirements', name: 'Requisitos Previos' }, { id: 'outcomes', name: 'Resultados Esperados' },
+                { id: 'guarantee', name: 'Garantía' }, { id: 'faq', name: 'FAQ' },
+                { id: 'finalCta', name: 'Llamado a la Acción Final' },
+            ];
+
+            const recommendedModules = ['mainContent', 'instructor', 'socials', 'audience', 'topics'];
+            
+            const moduleSelector = document.getElementById('moduleSelector');
+            const formSections = document.getElementById('formSections');
+            const moduleFeedback = document.getElementById('moduleFeedback');
+            const recommendedToggle = document.getElementById('recommendedStructureToggle');
+
+            const sectionTemplates = {
+                mainContent: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Contenido Principal</h2><div class="space-y-6"><div><label for="heroTitle" class="block text-gray-700 mb-2">Título Principal</label><textarea id="heroTitle" class="w-full p-3 rounded-lg custom-input" placeholder="Ej: Domina el Mercado..."></textarea></div><div><label for="heroDescription" class="block text-gray-700 mb-2">Descripción Principal</label><textarea id="heroDescription" class="w-full p-3 rounded-lg custom-input" placeholder="Ej: Deja de improvisar..."></textarea></div></div>`,
+                instructor: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Sobre el Instructor</h2><textarea id="instructorBio" class="w-full p-3 rounded-lg custom-input"></textarea>`,
+                socials: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Redes Sociales</h2><div id="socials-container" class="space-y-4"></div><button type="button" id="addSocialBtn" class="mt-4 text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors">+ Agregar Red Social (máx 4)</button>`,
+                testimonials: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Testimonios</h2><textarea id="testimonialsText" class="w-full p-3 rounded-lg custom-input" placeholder="Formato: [Nombre]: [Testimonio]"></textarea>`,
+                eventDetails: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Detalles del Evento</h2><div class="space-y-6"><div><label for="eventPlatform">Plataforma</label><input type="text" id="eventPlatform" placeholder="Ej: Zoom, YouTube Live" class="w-full p-3 rounded-lg custom-input"></div><div><label for="eventLink">Enlace de Acceso</label><input type="url" id="eventLink" class="w-full p-3 rounded-lg custom-input"></div><div><label for="limitedSpots">Cupos Limitados (Opcional)</label><input type="number" id="limitedSpots" placeholder="Ej: 100" class="w-full p-3 rounded-lg custom-input"></div></div>`,
+                countdown: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Contador Regresivo</h2><input type="text" id="classDate" placeholder="Ej: 28 de agosto a las 8:00 PM (GMT-6)" class="w-full p-3 rounded-lg custom-input">`,
+                video: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Video</h2><p class="text-sm text-gray-600">Por favor, sube el video en la sección "Entrega de Material Gráfico".</p>`,
+                audience: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">¿Para Quién es?</h2><textarea id="audienceText" class="w-full p-3 rounded-lg custom-input" placeholder="Describe a tu alumno ideal."></textarea>`,
+                topics: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Temario</h2><textarea id="topicsText" class="w-full p-3 rounded-lg custom-input" placeholder="Lista los temas que cubrirás."></textarea>`,
+                bonus: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Bonus</h2><textarea id="bonusText" class="w-full p-3 rounded-lg custom-input" placeholder="Describe los bonus que ofreces."></textarea>`,
+                requirements: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Requisitos Previos</h2><textarea id="requirementsText" class="w-full p-3 rounded-lg custom-input" placeholder="¿Qué necesita el alumno?"></textarea>`,
+                outcomes: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Resultados</h2><textarea id="outcomesText" class="w-full p-3 rounded-lg custom-input" placeholder="¿Qué logrará el alumno?"></textarea>`,
+                guarantee: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Garantía</h2><textarea id="guaranteeText" class="w-full p-3 rounded-lg custom-input" placeholder="Ej: Si no aprendes..."></textarea>`,
+                faq: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">FAQ</h2><textarea id="faqText" class="w-full p-3 rounded-lg custom-input" placeholder="P: Pregunta 1\nR: Respuesta 1"></textarea>`,
+                finalCta: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">CTA Final</h2><textarea id="finalCtaText" class="w-full p-3 rounded-lg custom-input" placeholder="Último párrafo para convencer."></textarea>`,
+            };
+
+            modules.forEach(module => {
+                const selectorId = `toggle-${module.id}`;
+                const formId = `${selectorId}-form`;
+                const selectorContainer = document.createElement('div');
+                selectorContainer.innerHTML = `<label class="flex items-center space-x-3 p-3 border-2 border-gray-200 rounded-lg module-card"><input type="checkbox" id="${selectorId}" class="section-toggle custom-checkbox"><span class="font-medium">${module.name}</span></label>`;
+                moduleSelector.appendChild(selectorContainer);
+                const sectionContainer = document.createElement('div');
+                sectionContainer.id = `container-${module.id}`;
+                sectionContainer.innerHTML = `<input type="checkbox" id="${formId}" class="section-toggle hidden"><div class="section-content"><section class="p-6 md:p-8 rounded-2xl glass-morphism form-section">${sectionTemplates[module.id] || ''}</section></div>`;
+                formSections.appendChild(sectionContainer);
+            });
+
+            const updateModuleLimits = () => {
+                if (recommendedToggle.checked) {
+                    moduleFeedback.innerHTML = '';
+                    return;
+                }
+                const selectedCount = moduleSelector.querySelectorAll('input[type="checkbox"]:checked').length;
+                if (selectedCount < 3) {
+                    moduleFeedback.innerHTML = `<div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-r-lg notification"><p class="font-bold">Selección Mínima Requerida</p><p class="text-sm">Debes seleccionar al menos 3 módulos. Has seleccionado ${selectedCount}.</p></div>`;
+                } else if (selectedCount > 5) {
+                    const extraModules = selectedCount - 5;
+                    const extraCost = extraModules * 10;
+                    moduleFeedback.innerHTML = `<div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded-r-lg notification"><p class="font-bold">Módulos Adicionales</p><p class="text-sm">Has seleccionado ${extraModules} módulo(s) extra. Se aplicará un cargo adicional de $${extraCost} USD.</p></div>`;
+                } else {
+                    moduleFeedback.innerHTML = '';
+                }
+            };
+            
+            const applyRecommendedStructure = (isRecommended) => {
+                 moduleSelector.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                    const moduleCard = checkbox.closest('.module-card');
+                    const formCheckbox = document.getElementById(`${checkbox.id}-form`);
+                    const moduleId = checkbox.id.replace('toggle-', '');
+                    
+                    if (isRecommended) {
+                        const shouldBeChecked = recommendedModules.includes(moduleId);
+                        checkbox.checked = shouldBeChecked;
+                        checkbox.disabled = true;
+                        formCheckbox.checked = shouldBeChecked;
+                        moduleCard.classList.toggle('selected', shouldBeChecked);
+                        moduleCard.classList.toggle('disabled', !shouldBeChecked);
+                    } else {
+                        checkbox.disabled = false;
+                        moduleCard.classList.remove('disabled');
+                    }
+                });
+                updateModuleLimits();
+            };
+
+            recommendedToggle.addEventListener('change', () => {
+                applyRecommendedStructure(recommendedToggle.checked);
+            });
+
+            moduleSelector.addEventListener('change', (e) => {
+                if(e.target.type === 'checkbox') {
+                    const moduleCard = e.target.closest('.module-card');
+                    const formCheckbox = document.getElementById(`${e.target.id}-form`);
+                    if (formCheckbox) {
+                        formCheckbox.checked = e.target.checked;
+                        moduleCard.classList.toggle('selected', e.target.checked);
+                    }
+                    updateModuleLimits();
+                }
+            });
+            
+            const addSocialButton = document.getElementById('addSocialBtn');
+            if (addSocialButton) {
+                addSocialButton.addEventListener('click', () => {
+                    const container = document.getElementById('socials-container');
+                    if (container.children.length < 4) {
+                        const inputWrapper = document.createElement('div');
+                        inputWrapper.className = 'flex items-center space-x-2';
+                        inputWrapper.innerHTML = `<input type="url" placeholder="URL de la red social #${container.children.length + 1}" class="w-full p-3 rounded-lg custom-input social-link"><button type="button" class="remove-social-btn text-red-500 hover:text-red-700 font-bold text-2xl">&times;</button>`;
+                        container.appendChild(inputWrapper);
+                        if (container.children.length === 4) addSocialButton.style.display = 'none';
+                    }
+                });
+                document.getElementById('socials-container').addEventListener('click', (e) => {
+                    if (e.target.classList.contains('remove-social-btn')) {
+                        e.target.parentElement.remove();
+                        addSocialButton.style.display = 'block';
+                    }
+                });
+            }
+            
+            applyRecommendedStructure(true);
+            // Resto del script (progreso, resumen, modal) sin cambios...
+                  const form = document.getElementById('requirementsForm');
+            const progressBar = document.getElementById('progressBar');
+            const allInputs = form.querySelectorAll('input[type="text"], input[type="url"], input[type="number"], textarea, input[type="file"]');
+            
+            const updateProgress = () => {
+                let filledInputs = 0;
+                const visibleInputs = Array.from(allInputs).filter(input => {
+                     const sectionContainer = input.closest('.section-content');
+                     if (!sectionContainer) return true;
+                     const toggle = sectionContainer.previousElementSibling;
+                     return !toggle || toggle.checked;
+                });
+                
+                visibleInputs.forEach(input => {
+                    if (input.value.trim() !== '') filledInputs++;
+                });
+
+                const progress = visibleInputs.length > 0 ? (filledInputs / visibleInputs.length) * 100 : 0;
+                progressBar.style.width = `${progress}%`;
+            };
+
+            form.addEventListener('input', updateProgress);
+            moduleSelector.addEventListener('change', updateProgress);
+            
+            const generateBtn = document.getElementById('generateSummaryBtn');
+            const modal = document.getElementById('summaryModal');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const summaryText = document.getElementById('summaryText');
+            const copyBtn = document.getElementById('copyBtn');
+
+            generateBtn.addEventListener('click', () => {
+                let summary = '### RESUMEN DE CONTENIDOS PARA FUNNEL ###\n\n';
+                
+                const selectedModules = Array.from(moduleSelector.querySelectorAll('input:checked')).map(cb => cb.id.replace('toggle-', ''));
+
+                summary += `MÓDULOS SELECCIONADOS: ${selectedModules.join(', ')}\n\n`;
+
+                modules.forEach(module => {
+                    if (selectedModules.includes(module.id)) {
+                        summary += `--- ${module.name.toUpperCase()} ---\n`;
+                        const section = document.getElementById(`container-${module.id}`);
+                        section.querySelectorAll('input, textarea').forEach(el => {
+                            if (el.id) {
+                                const value = el.type === 'file' ? el.files[0]?.name : el.value.trim();
+                                if (value) {
+                                    const label = document.querySelector(`label[for='${el.id}']`)?.textContent || el.placeholder;
+                                    summary += `${label}: ${value}\n`;
+                                }
+                            }
+                        });
+                        // Capturar redes sociales dinámicas
+                        if (module.id === 'socials') {
+                            section.querySelectorAll('.social-link').forEach((link, index) => {
+                                if (link.value.trim()) {
+                                    summary += `Red Social ${index + 1}: ${link.value.trim()}\n`;
+                                }
+                            });
+                        }
+                        summary += '\n';
+                    }
+                });
+
+                summaryText.value = summary;
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            });
+            
+            closeModalBtn.addEventListener('click', () => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            });
+
+            copyBtn.addEventListener('click', () => {
+                summaryText.select();
+                try {
+                    document.execCommand('copy');
+                    copyBtn.textContent = '¡Copiado!';
+                    setTimeout(() => { copyBtn.textContent = 'Copiar al Portapapeles'; }, 2000);
+                } catch (err) {
+                    copyBtn.textContent = 'Error al copiar';
+                }
+            });
+        });
+        
+    </script>
+</body>
+</html>
