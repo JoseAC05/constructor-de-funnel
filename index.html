@@ -5,103 +5,167 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Constructor de Contenidos para Funnel</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #2563eb;
             --primary-dark: #1d4ed8;
             --secondary: #0ea5e9;
+            --accent: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
         }
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f0f4f8 0%, #d9e8ff 100%);
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
+            min-height: 100vh;
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
         .glass-morphism {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 25px 45px rgba(37, 99, 235, 0.1);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 25px 45px rgba(37, 99, 235, 0.08);
         }
-        .form-section {
+        .card-hover {
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-origin: center;
+        }
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.15);
         }
         .gradient-text {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
         .custom-input {
-            transition: all 0.3s ease;
-            border: 2px solid #e5e7eb;
-            background: #f9fafb;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid #e2e8f0;
+            background: #f8fafc;
         }
         .custom-input:focus {
             outline: none;
             border-color: var(--primary);
             background: #fff;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+            transform: translateY(-1px);
         }
         .module-card {
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
+            border: 2px solid #e2e8f0;
+            position: relative;
+            overflow: hidden;
+        }
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.1), transparent);
+            transition: left 0.5s;
+        }
+        .module-card:hover::before {
+            left: 100%;
         }
         .module-card:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.1);
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.12);
+            border-color: var(--primary);
         }
         .module-card.selected {
             border-color: var(--primary);
-            background: #eff6ff;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
             color: var(--primary-dark);
+            transform: scale(1.02);
         }
         .module-card.disabled {
-            opacity: 0.5;
+            opacity: 0.6;
             cursor: not-allowed;
-            background: #f3f4f6;
+            background: #f1f5f9;
+            filter: grayscale(0.3);
         }
         .progress-bar-fill {
-            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            background-size: 200% 100%;
+            animation: progressShimmer 2s linear infinite;
+        }
+        @keyframes progressShimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
         .section-content {
             max-height: 0;
             overflow: hidden;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             opacity: 0;
-            transform: translateY(-10px);
+            transform: translateY(-20px);
         }
         .section-toggle:checked ~ .section-content {
-            max-height: 1500px;
-            margin-top: 1.5rem;
+            max-height: 2000px;
+            margin-top: 2rem;
             opacity: 1;
             transform: translateY(0);
         }
         .btn-primary {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            transition: all 0.3s ease;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        .btn-primary:hover::before {
+            left: 100%;
         }
         .btn-primary:hover {
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(37, 99, 235, 0.3);
+        }
+        .btn-primary:active {
+            transform: translateY(-1px) scale(1.02);
         }
         .custom-checkbox {
             appearance: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #cbd5e1;
-            border-radius: 6px;
+            width: 24px;
+            height: 24px;
+            border: 3px solid #cbd5e1;
+            border-radius: 8px;
             position: relative;
             background: white;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
         }
         .custom-checkbox:checked {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             border-color: var(--primary);
+            transform: scale(1.1);
         }
         .custom-checkbox:checked::after {
             content: '✓';
@@ -116,8 +180,8 @@
         .toggle-switch {
             position: relative;
             display: inline-block;
-            width: 50px;
-            height: 28px;
+            width: 60px;
+            height: 32px;
         }
         .toggle-switch input {
             opacity: 0;
@@ -131,115 +195,316 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 28px;
+            background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+            transition: .4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 32px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .slider:before {
             position: absolute;
             content: "";
-            height: 20px;
-            width: 20px;
+            height: 24px;
+            width: 24px;
             left: 4px;
             bottom: 4px;
-            background-color: white;
-            transition: .4s;
+            background: white;
+            transition: .4s cubic-bezier(0.4, 0, 0.2, 1);
             border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
         input:checked + .slider {
-            background-color: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
         }
         input:checked + .slider:before {
-            transform: translateX(22px);
+            transform: translateX(28px);
+        }
+        .notification {
+            animation: slideInRight 0.5s ease-out;
+        }
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        .modal-backdrop {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .floating-action {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 40;
+        }
+        .pulse-ring {
+            animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+        }
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(.33);
+                opacity: 1;
+            }
+            80%, 100% {
+                transform: scale(2.33);
+                opacity: 0;
+            }
+        }
+        /* Mejoras responsive */
+        @media (max-width: 640px) {
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            .glass-morphism {
+                padding: 1.5rem;
+                margin: 0.5rem 0;
+            }
+            .module-card {
+                padding: 1rem;
+            }
+            .btn-primary {
+                padding: 1rem 2rem;
+                font-size: 1rem;
+            }
+        }
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 2rem 0;
+            }
+            .section-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-gray-50 text-gray-800">
 
-    <div class="fixed top-0 left-0 w-full h-2 bg-gray-200 z-50">
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
         <div id="progressBar" class="h-full progress-bar-fill" style="width: 0%;"></div>
     </div>
 
-    <div class="container mx-auto p-4 md:p-8 max-w-4xl mt-8">
+    <!-- Hero Section -->
+    <div class="hero-gradient py-12 md:py-20 relative overflow-hidden">
+        <div class="absolute inset-0 bg-black opacity-20"></div>
+        <div class="container mx-auto px-4 md:px-8 max-w-6xl relative z-10">
+            <header class="text-center text-white">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-white bg-opacity-20 rounded-full mb-6 backdrop-blur-sm">
+                    <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7v10c0 5.55 3.84 9.739 9 10.93 5.16-1.191 9-5.38 9-10.93V7l-10-5z"/>
+                    </svg>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                    Constructor de Contenidos
+                    <span class="block text-3xl md:text-5xl font-light opacity-90">para tu Funnel</span>
+                </h1>
+                <p class="text-xl md:text-2xl font-light opacity-90 max-w-3xl mx-auto">
+                    Crea contenido profesional seleccionando los módulos que necesitas y completando la información paso a paso
+                </p>
+            </header>
+        </div>
+    </div>
 
-        <header class="text-center mb-12">
-            <h1 class="text-3xl md:text-5xl font-bold gradient-text">Constructor de Contenidos para tu Funnel</h1>
-            <p class="mt-4 text-base md:text-lg text-gray-600">Elige las secciones que quieres incluir y completa la información.</p>
-        </header>
+    <!-- Main Container -->
+    <div class="container mx-auto p-4 md:p-8 max-w-6xl -mt-10 relative z-20">
 
-        <!-- INICIO DE LA MODIFICACIÓN: Formulario apunta a Formspree -->
         <form id="requirementsForm" class="space-y-8" action="https://formspree.io/f/mkgzelle" method="POST">
-            <!-- FIN DE LA MODIFICACIÓN -->
 
-            <section class="p-6 md:p-8 rounded-2xl glass-morphism form-section">
-                <h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 flex items-center text-gray-800">
-                    <svg class="w-6 h-6 mr-3 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-                    Selección de Módulos
-                </h2>
-                
-                <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-4 rounded-r-lg mb-6 flex justify-between items-center">
-                    <div>
-                        <p class="font-bold">Usar Estructura Recomendada</p>
-                        <p class="text-sm">Activa esta opción para usar una selección optimizada de módulos.</p>
+            <!-- Module Selection -->
+            <section class="glass-morphism rounded-3xl p-6 md:p-10 card-hover">
+                <div class="flex items-center mb-8">
+                    <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mr-4">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                        </svg>
                     </div>
-                    <label class="toggle-switch">
+                    <div>
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Selección de Módulos</h2>
+                        <p class="text-gray-600">Elige los componentes que incluirás en tu funnel</p>
+                    </div>
+                </div>
+                
+                <!-- Recommended Structure Toggle -->
+                <div class="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-2xl p-6 mb-8 flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-blue-800 text-lg">Estructura Recomendada</h3>
+                            <p class="text-blue-700 text-sm">Usa nuestra selección optimizada de módulos basada en las mejores prácticas de conversión</p>
+                        </div>
+                    </div>
+                    <label class="toggle-switch flex-shrink-0">
                         <input type="checkbox" id="recommendedStructureToggle" checked>
                         <span class="slider"></span>
                     </label>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="moduleSelector">
-                    <!-- Módulos se insertan aquí -->
+                <!-- Module Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 section-grid" id="moduleSelector">
+                    <!-- Modules will be inserted here -->
                 </div>
-                <div id="moduleFeedback" class="mt-6"></div>
+                
+                <div id="moduleFeedback" class="mt-8"></div>
             </section>
 
-            <div class="space-y-8" id="formSections">
-                <!-- Secciones del formulario se insertan aquí -->
+            <!-- Dynamic Form Sections -->
+            <div class="space-y-6" id="formSections">
+                <!-- Form sections will be inserted here -->
             </div>
+
+            <!-- Additional Notes Section -->
+            <section class="glass-morphism rounded-3xl p-6 md:p-10 card-hover">
+                <div class="flex items-center mb-6">
+                    <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mr-4">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Notas Adicionales</h2>
+                        <p class="text-gray-600">¿Hay algo más que quieras agregar o aclarar?</p>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6 mb-6">
+                    <div class="flex items-start space-x-3">
+                        <svg class="w-6 h-6 text-purple-500 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div class="text-sm text-purple-800">
+                            <p class="font-medium mb-2">Este espacio es para ti</p>
+                            <p>Puedes incluir información adicional como:</p>
+                            <ul class="mt-2 space-y-1 text-purple-700">
+                                <li>• Referencias específicas de diseño</li>
+                                <li>• Colores o estilos preferidos</li>
+                                <li>• Instrucciones especiales</li>
+                                <li>• Cualquier detalle importante que no esté cubierto arriba</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <textarea 
+                    id="additionalNotes" 
+                    name="additional_notes"
+                    class="w-full p-4 rounded-xl custom-input min-h-32 resize-none"
+                    placeholder="Escribe aquí cualquier información adicional, preferencias de diseño, instrucciones especiales o detalles que consideres importantes para tu proyecto..."
+                    rows="6"
+                ></textarea>
+            </section>
             
-            <section class="p-6 md:p-8 rounded-2xl glass-morphism form-section">
-                <h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 flex items-center text-gray-800">
-                    <svg class="w-6 h-6 mr-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                    Entrega de Material Gráfico
-                </h2>
-                <div class="bg-green-50 border-l-4 border-green-400 text-green-800 p-4 rounded-r-lg">
-                    <p class="font-bold">Instrucciones Finales</p>
-                    <p class="mt-2 text-sm">Para enviarme tus archivos (logo, fotos, video), utiliza el siguiente enlace seguro. Se abrirá un formulario donde podrás subirlos directamente a mi Google Drive.</p>
-                    <a href="https://forms.gle/TU_ENLACE_AQUI" target="_blank" class="mt-4 inline-block bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors">
-                        Subir Archivos
-                    </a>
+            <!-- File Upload Instructions -->
+            <section class="glass-morphism rounded-3xl p-6 md:p-10 card-hover">
+                <div class="flex items-center mb-6">
+                    <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mr-4">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Entrega de Material Gráfico</h2>
+                        <p class="text-gray-600">Sube tus archivos de manera segura</p>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-green-800 text-lg mb-2">Instrucciones para subir archivos</h3>
+                            <p class="text-green-700 mb-4">Para enviarme tus archivos (logo, fotos, videos), utiliza el siguiente enlace seguro. Se abrirá un formulario donde podrás subirlos directamente.</p>
+                            <div class="bg-white rounded-xl p-4 border border-green-200 mb-4">
+                                <p class="text-sm text-green-800 font-medium mb-2">Formatos recomendados:</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-green-700">
+                                    <div>• Logo: PNG, SVG (fondo transparente)</div>
+                                    <div>• Fotos: JPG, PNG (alta resolución)</div>
+                                    <div>• Videos: MP4, MOV (máx. 100MB)</div>
+                                    <div>• Documentos: PDF, DOC</div>
+                                </div>
+                            </div>
+                            <a href="https://forms.gle/TU_ENLACE_AQUI" target="_blank" class="inline-flex items-center space-x-2 bg-green-600 text-white font-bold py-3 px-6 rounded-xl hover:bg-green-700 transition-all duration-300 hover:scale-105 hover:shadow-lg">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                </svg>
+                                <span>Subir Archivos</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </section>
             
-            <!-- INICIO DE LA MODIFICACIÓN: Campo oculto para el resumen -->
+            <!-- Hidden field for summary -->
             <textarea name="summary" id="summaryHidden" class="hidden"></textarea>
-            <!-- FIN DE LA MODIFICACIÓN -->
 
-            <div class="text-center pt-6">
-                <!-- INICIO DE LA MODIFICACIÓN: Botón de tipo 'submit' -->
-                <button type="submit" id="generateSummaryBtn" class="text-white font-bold py-4 px-10 rounded-full btn-primary text-lg shadow-lg">
-                    Enviar Contenidos
+            <!-- Submit Button -->
+            <div class="text-center py-8">
+                <button type="submit" id="generateSummaryBtn" class="text-white font-bold py-4 px-12 rounded-full btn-primary text-xl shadow-2xl relative overflow-hidden group">
+                    <span class="relative z-10 flex items-center space-x-3">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                        </svg>
+                        <span>Enviar Contenidos</span>
+                    </span>
                 </button>
-                <!-- FIN DE LA MODIFICACIÓN -->
             </div>
         </form>
         
-        <!-- INICIO DE LA MODIFICACIÓN: Sección para configurar Formspree -->
-        <section class="mt-12 text-center text-sm text-gray-500 p-4 border-t">
-            <h3 class="font-semibold text-gray-600">Nota para el desarrollador:</h3>
-            <p>Para recibir los envíos de este formulario, crea una cuenta en <a href="https://formspree.io/" target="_blank" class="text-blue-600 underline">Formspree</a>, crea un nuevo formulario y reemplaza `TU_ID_UNICO_AQUI` en la etiqueta `<form>` con tu endpoint único.</p>
+        <!-- Developer Note -->
+        <section class="mt-16 text-center p-6 border-t border-gray-200 bg-white bg-opacity-50 rounded-2xl backdrop-blur-sm">
+            <div class="max-w-3xl mx-auto">
+                <h3 class="font-semibold text-gray-700 mb-3 flex items-center justify-center space-x-2">
+                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>Nota para el desarrollador</span>
+                </div>
+                <p class="text-sm text-gray-600">Para recibir los envíos de este formulario, crea una cuenta en <a href="https://formspree.io/" target="_blank" class="text-blue-600 underline hover:text-blue-800">Formspree</a>, crea un nuevo formulario y reemplaza el endpoint en la etiqueta <code class="bg-gray-100 px-2 py-1 rounded text-xs">&lt;form&gt;</code>.</p>
+            </div>
         </section>
-        <!-- FIN DE LA MODIFICACIÓN -->
     </div>
 
-    <div id="summaryModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50 modal-backdrop">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl flex flex-col glass-morphism text-center p-8">
-            <h2 class="text-3xl font-bold gradient-text">¡Información Enviada!</h2>
-            <p class="mt-4 text-gray-600">Gracias por completar la guía. He recibido tus respuestas y me pondré en contacto contigo en breve si necesito alguna aclaración.</p>
-            <p class="mt-2 text-gray-600">No olvides subir tus archivos gráficos usando el enlace proporcionado.</p>
-            <button id="closeModalBtn" class="mt-8 w-full text-white font-bold py-3 px-6 rounded-full btn-primary">
-                Cerrar
+    <!-- Success Modal -->
+    <div id="summaryModal" class="fixed inset-0 bg-black bg-opacity-60 hidden items-center justify-center p-4 z-50 modal-backdrop">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg flex flex-col glass-morphism text-center p-8 md:p-10 transform scale-95 opacity-0 transition-all duration-300" id="modalContent">
+            <div class="w-20 h-20 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-bold gradient-text mb-4">¡Información Enviada!</h2>
+            <p class="text-gray-600 mb-4 text-lg">Gracias por completar la guía. He recibido tus respuestas y me pondré en contacto contigo en breve si necesito alguna aclaración.</p>
+            <div class="bg-gradient-to-r from-blue-50 to-green-50 rounded-2xl p-4 mb-6">
+                <p class="text-sm text-gray-700">
+                    <span class="font-semibold text-green-600">Recordatorio:</span> No olvides subir tus archivos gráficos usando el enlace proporcionado.
+                </p>
+            </div>
+            <button id="closeModalBtn" class="w-full text-white font-bold py-4 px-6 rounded-2xl btn-primary text-lg">
+                Perfecto, Gracias
+            </button>
+        </div>
+    </div>
+
+    <!-- Floating Progress Indicator (Mobile) -->
+    <div class="floating-action md:hidden">
+        <div class="relative">
+            <div class="absolute inset-0 bg-blue-500 rounded-full pulse-ring"></div>
+            <button id="progressIndicator" class="w-14 h-14 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full shadow-lg flex items-center justify-center text-white font-bold">
+                0%
             </button>
         </div>
     </div>
@@ -247,14 +512,21 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const modules = [
-                { id: 'mainContent', name: 'Contenido Principal' }, { id: 'instructor', name: 'Sobre el Instructor' },
-                { id: 'socials', name: 'Redes Sociales' }, { id: 'testimonials', name: 'Testimonios' },
-                { id: 'eventDetails', name: 'Detalles del Evento' }, { id: 'countdown', name: 'Contador' },
-                { id: 'video', name: 'Video' }, { id: 'audience', name: 'Para Quién Es' },
-                { id: 'topics', name: 'Temario' }, { id: 'bonus', name: 'Bonus' },
-                { id: 'requirements', name: 'Requisitos Previos' }, { id: 'outcomes', name: 'Resultados Esperados' },
-                { id: 'guarantee', name: 'Garantía' }, { id: 'faq', name: 'FAQ' },
-                { id: 'finalCta', name: 'Llamado a la Acción Final' },
+                { id: 'mainContent', name: 'Contenido Principal', icon: 'home' },
+                { id: 'instructor', name: 'Sobre el Instructor', icon: 'user' },
+                { id: 'socials', name: 'Redes Sociales', icon: 'share-2' },
+                { id: 'testimonials', name: 'Testimonios', icon: 'message-circle' },
+                { id: 'eventDetails', name: 'Detalles del Evento', icon: 'calendar' },
+                { id: 'countdown', name: 'Contador', icon: 'clock' },
+                { id: 'video', name: 'Video', icon: 'video' },
+                { id: 'audience', name: 'Para Quién Es', icon: 'users' },
+                { id: 'topics', name: 'Temario', icon: 'book-open' },
+                { id: 'bonus', name: 'Bonus', icon: 'gift' },
+                { id: 'requirements', name: 'Requisitos Previos', icon: 'check-circle' },
+                { id: 'outcomes', name: 'Resultados Esperados', icon: 'target' },
+                { id: 'guarantee', name: 'Garantía', icon: 'shield' },
+                { id: 'faq', name: 'FAQ', icon: 'help-circle' },
+                { id: 'finalCta', name: 'Llamado Final', icon: 'zap' },
             ];
 
             const recommendedModules = ['mainContent', 'instructor', 'socials', 'audience', 'topics'];
@@ -263,56 +535,441 @@
             const formSections = document.getElementById('formSections');
             const moduleFeedback = document.getElementById('moduleFeedback');
             const recommendedToggle = document.getElementById('recommendedStructureToggle');
+            const progressBar = document.getElementById('progressBar');
+            const progressIndicator = document.getElementById('progressIndicator');
 
-            const sectionTemplates = {
-                mainContent: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Contenido Principal</h2><div class="space-y-6"><div><label for="heroTitle" class="block text-gray-700 mb-2">Título Principal</label><textarea id="heroTitle" class="w-full p-3 rounded-lg custom-input" placeholder="Ej: Domina el Mercado..."></textarea></div><div><label for="heroDescription" class="block text-gray-700 mb-2">Descripción Principal</label><textarea id="heroDescription" class="w-full p-3 rounded-lg custom-input" placeholder="Ej: Deja de improvisar..."></textarea></div></div>`,
-                instructor: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Sobre el Instructor</h2><textarea id="instructorBio" class="w-full p-3 rounded-lg custom-input"></textarea>`,
-                socials: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Redes Sociales</h2><div id="socials-container" class="space-y-4"></div><button type="button" id="addSocialBtn" class="mt-4 text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors">+ Agregar Red Social (máx 4)</button>`,
-                testimonials: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Testimonios</h2><textarea id="testimonialsText" class="w-full p-3 rounded-lg custom-input" placeholder="Formato: [Nombre]: [Testimonio]"></textarea>`,
-                eventDetails: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Detalles del Evento</h2><div class="space-y-6"><div><label for="eventPlatform">Plataforma</label><input type="text" id="eventPlatform" placeholder="Ej: Zoom, YouTube Live" class="w-full p-3 rounded-lg custom-input"></div><div><label for="eventLink">Enlace de Acceso</label><input type="url" id="eventLink" class="w-full p-3 rounded-lg custom-input"></div><div><label for="limitedSpots">Cupos Limitados (Opcional)</label><input type="number" id="limitedSpots" placeholder="Ej: 100" class="w-full p-3 rounded-lg custom-input"></div></div>`,
-                countdown: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Contador Regresivo</h2><input type="text" id="classDate" placeholder="Ej: 28 de agosto a las 8:00 PM (GMT-6)" class="w-full p-3 rounded-lg custom-input">`,
-                video: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Video</h2><p class="text-sm text-gray-600">Por favor, sube el video usando el enlace en la sección "Entrega de Material Gráfico".</p>`,
-                audience: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">¿Para Quién es?</h2><textarea id="audienceText" class="w-full p-3 rounded-lg custom-input" placeholder="Describe a tu alumno ideal."></textarea>`,
-                topics: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Temario</h2><textarea id="topicsText" class="w-full p-3 rounded-lg custom-input" placeholder="Lista los temas que cubrirás."></textarea>`,
-                bonus: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Bonus</h2><textarea id="bonusText" class="w-full p-3 rounded-lg custom-input" placeholder="Describe los bonus que ofreces."></textarea>`,
-                requirements: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Requisitos Previos</h2><textarea id="requirementsText" class="w-full p-3 rounded-lg custom-input" placeholder="¿Qué necesita el alumno?"></textarea>`,
-                outcomes: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Resultados</h2><textarea id="outcomesText" class="w-full p-3 rounded-lg custom-input" placeholder="¿Qué logrará el alumno?"></textarea>`,
-                guarantee: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">Garantía</h2><textarea id="guaranteeText" class="w-full p-3 rounded-lg custom-input" placeholder="Ej: Si no aprendes..."></textarea>`,
-                faq: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">FAQ</h2><textarea id="faqText" class="w-full p-3 rounded-lg custom-input" placeholder="P: Pregunta 1\nR: Respuesta 1"></textarea>`,
-                finalCta: `<h2 class="text-xl md:text-2xl font-bold mb-6 border-b pb-4 gradient-text">CTA Final</h2><textarea id="finalCtaText" class="w-full p-3 rounded-lg custom-input" placeholder="Último párrafo para convencer."></textarea>`,
+            // Icon mapping for Lucide icons
+            const getIconSVG = (iconName) => {
+                const icons = {
+                    'home': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>',
+                    'user': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>',
+                    'share-2': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>',
+                    'message-circle': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>',
+                    'calendar': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>',
+                    'clock': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>',
+                    'video': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>',
+                    'users': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a4 4 0 11-8 0 4 4 0 018 0z"></path>',
+                    'book-open': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>',
+                    'gift': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path>',
+                    'check-circle': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>',
+                    'target': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>',
+                    'shield': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>',
+                    'help-circle': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>',
+                    'zap': '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>'
+                };
+                return icons[iconName] || icons['home'];
             };
 
+            const sectionTemplates = {
+                mainContent: `
+                    <div class="flex items-center mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">${getIconSVG('home')}</svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Contenido Principal</h2>
+                            <p class="text-gray-600">El mensaje principal de tu funnel</p>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="bg-gray-50 p-4 rounded-xl">
+                            <label for="heroTitle" class="block text-gray-700 font-semibold mb-3">Título Principal</label>
+                            <textarea id="heroTitle" name="hero_title" class="w-full p-4 rounded-xl custom-input min-h-24 resize-none" placeholder="Ej: Domina el Marketing Digital y Multiplica tus Ventas en 30 Días" rows="2"></textarea>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-xl">
+                            <label for="heroDescription" class="block text-gray-700 font-semibold mb-3">Descripción Principal</label>
+                            <textarea id="heroDescription" name="hero_description" class="w-full p-4 rounded-xl custom-input min-h-32 resize-none" placeholder="Ej: Deja de improvisar en tus estrategias de marketing. Aprende las técnicas exactas que utilizan los expertos para generar ingresos constantes..." rows="4"></textarea>
+                        </div>
+                    </div>
+                `,
+                instructor: `
+                    <div class="flex items-center mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">${getIconSVG('user')}</svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Sobre el Instructor</h2>
+                            <p class="text-gray-600">Tu experiencia y credenciales</p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-xl">
+                        <textarea id="instructorBio" name="instructor_bio" class="w-full p-4 rounded-xl custom-input min-h-40 resize-none" placeholder="Cuéntanos sobre tu experiencia, logros, certificaciones y por qué eres la persona indicada para enseñar este tema..." rows="6"></textarea>
+                    </div>
+                `,
+                socials: `
+                    <div class="flex items-center mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-r from-pink-500 to-rose-500 rounded-xl flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">${getIconSVG('share-2')}</svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Redes Sociales</h2>
+                            <p class="text-gray-600">Enlaces a tus perfiles sociales</p>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-pink-50 to-rose-50 p-4 rounded-xl mb-6">
+                        <div class="flex items-center space-x-2 text-pink-800">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="text-sm font-medium">Incluye solo las redes sociales más relevantes (máximo 4)</span>
+                        </div>
+                    </div>
+                    <div id="socials-container" class="space-y-4 mb-4"></div>
+                    <button type="button" id="addSocialBtn" class="flex items-center space-x-2 text-pink-600 hover:text-pink-800 font-semibold py-2 px-4 rounded-lg border-2 border-pink-200 hover:border-pink-300 transition-all duration-300 hover:bg-pink-50">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        <span>Agregar Red Social</span>
+                    </button>
+                `,
+                testimonials: `
+                    <div class="flex items-center mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">${getIconSVG('message-circle')}</svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Testimonios</h2>
+                            <p class="text-gray-600">Opiniones de tus estudiantes anteriores</p>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-xl mb-6">
+                        <div class="text-sm text-green-800">
+                            <p class="font-medium mb-2">Formato recomendado:</p>
+                            <div class="bg-white p-3 rounded-lg border border-green-200">
+                                <code class="text-green-700">
+                                [Nombre del Cliente]: "El testimonio completo aquí..."<br>
+                                [Otro Cliente]: "Otro testimonio..."
+                                </code>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-xl">
+                        <textarea id="testimonialsText" name="testimonials" class="w-full p-4 rounded-xl custom-input min-h-40 resize-none" placeholder="[María González]: 'Increíble curso, logré duplicar mis ventas en solo 3 semanas siguiendo las estrategias enseñadas.'" rows="6"></textarea>
+                    </div>
+                `,
+                eventDetails: `
+                    <div class="flex items-center mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">${getIconSVG('calendar')}</svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Detalles del Evento</h2>
+                            <p class="text-gray-600">Información logística del evento</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-gray-50 p-4 rounded-xl">
+                            <label for="eventPlatform" class="block text-gray-700 font-semibold mb-3">Plataforma</label>
+                            <input type="text" id="eventPlatform" name="event_platform" placeholder="Ej: Zoom, YouTube Live, Google Meet" class="w-full p-4 rounded-xl custom-input">
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-xl">
+                            <label for="limitedSpots" class="block text-gray-700 font-semibold mb-3">Cupos Limitados (Opcional)</label>
+                            <input type="number" id="limitedSpots" name="limited_spots" placeholder="Ej: 100" class="w-full p-4 rounded-xl custom-input">
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-xl md:col-span-2">
+                            <label for="eventLink" class="block text-gray-700 font-semibold mb-3">Enlace de Acceso</label>
+                            <input type="url" id="eventLink" name="event_link" placeholder="https://..." class="w-full p-4 rounded-xl custom-input">
+                        </div>
+                    </div>
+                `,
+                countdown: `
+                    <div class="flex items-center mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">${getIconSVG('clock')}</svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Contador Regresivo</h2>
+                            <p class="text-gray-600">Fecha y hora del evento</p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-xl">
+                        <input type="text" id="classDate" name="class_date" placeholder="Ej: 28 de agosto a las 8:00 PM (GMT-6)" class="w-full p-4 rounded-xl custom-input">
+                    </div>
+                `,
+                video: `
+                    <div class="flex items-center mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-r from-red-500 to-pink-500 rounded-xl flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">${getIconSVG('video')}</svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Video</h2>
+                            <p class="text-gray-600">Material audiovisual</p>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-red-50 to-pink-50 border-2 border-red-200 rounded-2xl p-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-red-800 mb-2">Instrucciones para el video</h3>
+                                <p class="text-red-700 text-sm mb-3">Por favor, sube el video usando el enlace en la sección "Entrega de Material Gráfico" al final del formulario.</p>
+                                <div class="bg-white p-3 rounded-lg border border-red-200 text-sm text-red-800">
+                                    <p class="font-medium mb-1">Especificaciones recomendadas:</p>
+                                    <ul class="space-y-1 text-red-700">
+                                        <li>• Formato: MP4 (recomendado)</li>
+                                        <li>• Resolución: 1080p mínimo</li>
+                                        <li>• Duración: 2-5 minutos ideal</li>
+                                        <li>• Tamaño máximo: 100MB</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                audience: `
+                    <div class="flex items-center mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-xl flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">${getIconSVG('users')}</svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">¿Para Quién Es?</h2>
+                            <p class="text-gray-600">Define tu audiencia objetivo</p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-xl">
+                        <textarea id="audienceText" name="audience" class="w-full p-4 rounded-xl custom-input min-h-40 resize-none" placeholder="Describe a tu alumno ideal: ¿Qué tipo de persona se beneficiaría más de tu contenido? ¿Cuál es su nivel de experiencia? ¿Qué problemas enfrentan?" rows="6"></textarea>
+                    </div>
+                `,
+                topics: `
+                    <div class="flex items-center mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-xl flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">${getIconSVG('book-open')}</svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Temario</h2>
+                            <p class="text-gray-600">¿Qué temas cubrirás?</p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-xl">
+                        <textarea id="topicsText" name="topics" class="w-full p-4 rounded-xl custom-input min-h-40 resize-none" placeholder="Lista los temas principales que cubrirás en tu evento o curso. Puedes organizarlos por módulos, lecciones o simplemente como una lista..." rows="6"></textarea>
+                    </div>
+                `,
+                bonus: `
+                    <div class="flex items-center mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">${getIconSVG('gift')}</svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Bonus</h2>
+                            <p class="text-gray-600">Valor agregado para tus estudiantes</p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-xl">
+                        <textarea id="bonusText" name="bonus" class="w-full p-4 rounded-xl custom-input min-h-40 resize-none" placeholder="Describe los bonus que ofreces: templates, recursos adicionales, acceso a comunidad, sesiones extra, etc." rows="6"></textarea>
+                    </div>
+                `,
+                requirements: `
+                    <div class="flex items-center mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-teal-500 rounded-xl flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">${getIconSVG('check-circle')}</svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Requisitos Previos</h2>
+                            <p class="text-gray-600">¿Qué necesita saber el alumno?</p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-xl">
+                        <textarea id="requirementsText" name="requirements" class="w-full p-4 rounded-xl custom-input min-h-32 resize-none" placeholder="¿Qué conocimientos, herramientas o materiales necesita tener el alumno antes de participar? ¿O es para principiantes?" rows="4"></textarea>
+                    </div>
+                `,
+                outcomes: `
+                    <div class="flex items-center mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">${getIconSVG('target')}</svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Resultados Esperados</h2>
+                            <p class="text-gray-600">¿Qué logrará el alumno?</p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-xl">
+                        <textarea id="outcomesText" name="outcomes" class="w-full p-4 rounded-xl custom-input min-h-40 resize-none" placeholder="¿Qué resultados específicos puede esperar el alumno después de completar tu curso o evento? Sé específico y realista." rows="6"></textarea>
+                    </div>
+                `,
+                guarantee: `
+                    <div class="flex items-center mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">${getIconSVG('shield')}</svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Garantía</h2>
+                            <p class="text-gray-600">Tu promesa de satisfacción</p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-xl">
+                        <textarea id="guaranteeText" name="guarantee" class="w-full p-4 rounded-xl custom-input min-h-32 resize-none" placeholder="Ej: Si no aprendes al menos 3 estrategias nuevas que puedas implementar inmediatamente, te devuelvo tu dinero sin preguntas..." rows="4"></textarea>
+                    </div>
+                `,
+                faq: `
+                    <div class="flex items-center mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-r from-violet-500 to-purple-500 rounded-xl flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">${getIconSVG('help-circle')}</svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Preguntas Frecuentes</h2>
+                            <p class="text-gray-600">Responde las dudas más comunes</p>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-violet-50 to-purple-50 p-4 rounded-xl mb-6">
+                        <div class="text-sm text-violet-800">
+                            <p class="font-medium mb-2">Formato recomendado:</p>
+                            <div class="bg-white p-3 rounded-lg border border-violet-200">
+                                <code class="text-violet-700">
+                                P: ¿Pregunta 1?<br>
+                                R: Respuesta completa a la pregunta 1<br><br>
+                                P: ¿Pregunta 2?<br>
+                                R: Respuesta completa a la pregunta 2
+                                </code>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-xl">
+                        <textarea id="faqText" name="faq" class="w-full p-4 rounded-xl custom-input min-h-40 resize-none" placeholder="P: ¿Necesito experiencia previa?
+R: No, el curso está diseñado para principiantes...
+
+P: ¿Cuánto tiempo dura el evento?
+R: Son 3 horas de contenido intensivo..." rows="8"></textarea>
+                    </div>
+                `,
+                finalCta: `
+                    <div class="flex items-center mb-8">
+                        <div class="w-12 h-12 bg-gradient-to-r from-red-500 to-pink-500 rounded-xl flex items-center justify-center mr-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">${getIconSVG('zap')}</svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Llamado a la Acción Final</h2>
+                            <p class="text-gray-600">El último empujón para la conversión</p>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-xl">
+                        <textarea id="finalCtaText" name="final_cta" class="w-full p-4 rounded-xl custom-input min-h-40 resize-none" placeholder="Escribe tu mensaje final de conversión. Este debe crear urgencia y motivar la acción inmediata..." rows="6"></textarea>
+                    </div>
+                `,
+            };
+
+            // Create module cards
             modules.forEach(module => {
                 const selectorId = `toggle-${module.id}`;
                 const formId = `${selectorId}-form`;
-                const selectorContainer = document.createElement('div');
-                selectorContainer.innerHTML = `<label class="flex items-center space-x-3 p-3 border-2 border-gray-200 rounded-lg module-card"><input type="checkbox" id="${selectorId}" class="section-toggle custom-checkbox"><span class="font-medium">${module.name}</span></label>`;
-                moduleSelector.appendChild(selectorContainer);
+                
+                const moduleCard = document.createElement('div');
+                moduleCard.innerHTML = `
+                    <label class="flex items-center space-x-4 p-4 md:p-6 border-2 border-gray-200 rounded-2xl module-card bg-white hover:bg-gray-50 transition-all duration-300">
+                        <input type="checkbox" id="${selectorId}" class="section-toggle custom-checkbox">
+                        <div class="flex items-center space-x-3 flex-1">
+                            <div class="w-10 h-10 bg-gradient-to-r from-gray-400 to-gray-500 rounded-lg flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    ${getIconSVG(module.icon)}
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="font-semibold text-gray-800 block">${module.name}</span>
+                                <span class="text-sm text-gray-500">Módulo ${modules.indexOf(module) + 1}</span>
+                            </div>
+                        </div>
+                    </label>
+                `;
+                moduleSelector.appendChild(moduleCard);
+
+                // Create form section
                 const sectionContainer = document.createElement('div');
                 sectionContainer.id = `container-${module.id}`;
-                sectionContainer.innerHTML = `<input type="checkbox" id="${formId}" class="section-toggle hidden"><div class="section-content"><section class="p-6 md:p-8 rounded-2xl glass-morphism form-section">${sectionTemplates[module.id] || ''}</section></div>`;
+                sectionContainer.innerHTML = `
+                    <input type="checkbox" id="${formId}" class="section-toggle hidden">
+                    <div class="section-content">
+                        <section class="glass-morphism rounded-3xl p-6 md:p-10 card-hover">
+                            ${sectionTemplates[module.id] || ''}
+                        </section>
+                    </div>
+                `;
                 formSections.appendChild(sectionContainer);
             });
+
+            // Progress calculation
+            const updateProgress = () => {
+                const totalSections = document.querySelectorAll('.section-toggle:checked').length;
+                const filledInputs = Array.from(document.querySelectorAll('input[type="text"], input[type="url"], input[type="number"], textarea')).filter(input => {
+                    return input.value.trim() !== '' && !input.classList.contains('hidden') && input.id !== 'summaryHidden' && input.name !== 'summary';
+                }).length;
+                
+                const progress = totalSections > 0 ? Math.min(100, (filledInputs / (totalSections * 2)) * 100) : 0;
+                
+                progressBar.style.width = `${progress}%`;
+                if (progressIndicator) {
+                    progressIndicator.textContent = `${Math.round(progress)}%`;
+                }
+            };
+
+            // Update progress on input changes
+            document.addEventListener('input', updateProgress);
+            document.addEventListener('change', updateProgress);
 
             const updateModuleLimits = () => {
                 if (recommendedToggle.checked) {
                     moduleFeedback.innerHTML = '';
                     return;
                 }
+                
                 const selectedCount = moduleSelector.querySelectorAll('input[type="checkbox"]:checked').length;
+                
                 if (selectedCount < 3) {
-                    moduleFeedback.innerHTML = `<div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-r-lg notification"><p class="font-bold">Selección Mínima Requerida</p><p class="text-sm">Debes seleccionar al menos 3 módulos. Has seleccionado ${selectedCount}.</p></div>`;
+                    moduleFeedback.innerHTML = `
+                        <div class="bg-gradient-to-r from-yellow-50 to-amber-50 border-2 border-yellow-300 rounded-2xl p-6 notification">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-8 h-8 bg-yellow-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-yellow-800 text-lg">Selección Mínima Requerida</p>
+                                    <p class="text-yellow-700">Debes seleccionar al menos 3 módulos para crear un funnel efectivo. Has seleccionado <span class="font-semibold">${selectedCount}</span>.</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
                 } else if (selectedCount > 5) {
                     const extraModules = selectedCount - 5;
                     const extraCost = extraModules * 10;
-                    moduleFeedback.innerHTML = `<div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded-r-lg notification"><p class="font-bold">Módulos Adicionales</p><p class="text-sm">Has seleccionado ${extraModules} módulo(s) extra. Se aplicará un cargo adicional de $${extraCost} USD.</p></div>`;
+                    moduleFeedback.innerHTML = `
+                        <div class="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-300 rounded-2xl p-6 notification">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-blue-800 text-lg">Módulos Adicionales</p>
+                                    <p class="text-blue-700">Has seleccionado <span class="font-semibold">${extraModules} módulo(s) extra</span>. Se aplicará un cargo adicional de <span class="font-bold">${extraCost} USD</span>.</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
                 } else {
-                    moduleFeedback.innerHTML = '';
+                    moduleFeedback.innerHTML = `
+                        <div class="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-2xl p-6 notification">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-green-800 text-lg">Selección Perfecta</p>
+                                    <p class="text-green-700">Has seleccionado <span class="font-semibold">${selectedCount} módulos</span>. Esta es una cantidad ideal para un funnel efectivo.</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
                 }
             };
             
             const applyRecommendedStructure = (isRecommended) => {
-                 moduleSelector.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                moduleSelector.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
                     const moduleCard = checkbox.closest('.module-card');
                     const formCheckbox = document.getElementById(`${checkbox.id}-form`);
                     const moduleId = checkbox.id.replace('toggle-', '');
@@ -324,12 +981,29 @@
                         formCheckbox.checked = shouldBeChecked;
                         moduleCard.classList.toggle('selected', shouldBeChecked);
                         moduleCard.classList.toggle('disabled', !shouldBeChecked);
+                        
+                        // Update icon gradient for selected modules
+                        const icon = moduleCard.querySelector('.w-10.h-10');
+                        if (shouldBeChecked) {
+                            icon.className = 'w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center';
+                        } else {
+                            icon.className = 'w-10 h-10 bg-gradient-to-r from-gray-400 to-gray-500 rounded-lg flex items-center justify-center';
+                        }
                     } else {
                         checkbox.disabled = false;
                         moduleCard.classList.remove('disabled');
+                        
+                        // Reset icon gradient
+                        const icon = moduleCard.querySelector('.w-10.h-10');
+                        if (checkbox.checked) {
+                            icon.className = 'w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center';
+                        } else {
+                            icon.className = 'w-10 h-10 bg-gradient-to-r from-gray-400 to-gray-500 rounded-lg flex items-center justify-center';
+                        }
                     }
                 });
                 updateModuleLimits();
+                updateProgress();
             };
 
             recommendedToggle.addEventListener('change', () => {
@@ -337,95 +1011,213 @@
             });
 
             moduleSelector.addEventListener('change', (e) => {
-                if(e.target.type === 'checkbox') {
+                if (e.target.type === 'checkbox') {
                     const moduleCard = e.target.closest('.module-card');
                     const formCheckbox = document.getElementById(`${e.target.id}-form`);
+                    const icon = moduleCard.querySelector('.w-10.h-10');
+                    
                     if (formCheckbox) {
                         formCheckbox.checked = e.target.checked;
                         moduleCard.classList.toggle('selected', e.target.checked);
+                        
+                        // Update icon gradient
+                        if (e.target.checked) {
+                            icon.className = 'w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center';
+                        } else {
+                            icon.className = 'w-10 h-10 bg-gradient-to-r from-gray-400 to-gray-500 rounded-lg flex items-center justify-center';
+                        }
                     }
                     updateModuleLimits();
+                    updateProgress();
                 }
             });
             
-            const addSocialButton = document.getElementById('addSocialBtn');
-            if (addSocialButton) {
-                addSocialButton.addEventListener('click', () => {
-                    const container = document.getElementById('socials-container');
-                    if (container.children.length < 4) {
-                        const inputWrapper = document.createElement('div');
-                        inputWrapper.className = 'flex items-center space-x-2';
-                        inputWrapper.innerHTML = `<input type="url" placeholder="URL de la red social #${container.children.length + 1}" class="w-full p-3 rounded-lg custom-input social-link"><button type="button" class="remove-social-btn text-red-500 hover:text-red-700 font-bold text-2xl">&times;</button>`;
-                        container.appendChild(inputWrapper);
-                        if (container.children.length === 4) addSocialButton.style.display = 'none';
-                    }
-                });
-                document.getElementById('socials-container').addEventListener('click', (e) => {
-                    if (e.target.classList.contains('remove-social-btn')) {
-                        e.target.parentElement.remove();
-                        addSocialButton.style.display = 'block';
-                    }
-                });
-            }
+            // Social media functionality
+            let socialCount = 0;
+            const maxSocials = 4;
             
+            document.addEventListener('click', (e) => {
+                if (e.target.id === 'addSocialBtn' || e.target.closest('#addSocialBtn')) {
+                    e.preventDefault();
+                    const container = document.getElementById('socials-container');
+                    const addBtn = document.getElementById('addSocialBtn');
+                    
+                    if (socialCount < maxSocials) {
+                        socialCount++;
+                        const inputWrapper = document.createElement('div');
+                        inputWrapper.className = 'flex items-center space-x-3 bg-gray-50 p-4 rounded-xl';
+                        inputWrapper.innerHTML = `
+                            <div class="flex-1">
+                                <input type="url" name="social_link_${socialCount}" placeholder="URL de la red social #${socialCount}" class="w-full p-3 rounded-lg custom-input social-link">
+                            </div>
+                            <button type="button" class="remove-social-btn w-10 h-10 bg-red-500 hover:bg-red-600 text-white rounded-lg flex items-center justify-center transition-colors duration-300">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        `;
+                        container.appendChild(inputWrapper);
+                        
+                        if (socialCount >= maxSocials) {
+                            addBtn.style.display = 'none';
+                        }
+                        
+                        // Update button text
+                        const remainingSocials = maxSocials - socialCount;
+                        if (remainingSocials > 0) {
+                            addBtn.querySelector('span').textContent = `Agregar Red Social (${remainingSocials} restantes)`;
+                        }
+                    }
+                }
+                
+                if (e.target.classList.contains('remove-social-btn') || e.target.closest('.remove-social-btn')) {
+                    e.preventDefault();
+                    const wrapper = e.target.closest('.flex.items-center.space-x-3');
+                    if (wrapper) {
+                        wrapper.remove();
+                        socialCount--;
+                        
+                        const addBtn = document.getElementById('addSocialBtn');
+                        if (addBtn) {
+                            addBtn.style.display = 'flex';
+                            const remainingSocials = maxSocials - socialCount;
+                            addBtn.querySelector('span').textContent = remainingSocials > 0 ? 
+                                `Agregar Red Social (${remainingSocials} restantes)` : 
+                                'Agregar Red Social';
+                        }
+                    }
+                }
+            });
+            
+            // Initialize with recommended structure
             applyRecommendedStructure(true);
             
+            // Form submission
             const form = document.getElementById('requirementsForm');
             const summaryHidden = document.getElementById('summaryHidden');
             const modal = document.getElementById('summaryModal');
+            const modalContent = document.getElementById('modalContent');
             const closeModalBtn = document.getElementById('closeModalBtn');
 
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
+                // Generate comprehensive summary
                 let summary = '### RESUMEN DE CONTENIDOS PARA FUNNEL ###\n\n';
+                
                 const selectedModules = Array.from(moduleSelector.querySelectorAll('input:checked')).map(cb => cb.id.replace('toggle-', ''));
-                summary += `MÓDULOS SELECCIONADOS: ${selectedModules.join(', ')}\n\n`;
+                summary += `MÓDULOS SELECCIONADOS: ${selectedModules.join(', ')}\n`;
+                summary += `TOTAL DE MÓDULOS: ${selectedModules.length}\n\n`;
 
                 modules.forEach(module => {
                     if (selectedModules.includes(module.id)) {
                         summary += `--- ${module.name.toUpperCase()} ---\n`;
                         const section = document.getElementById(`container-${module.id}`);
-                        section.querySelectorAll('input, textarea').forEach(el => {
-                            if (el.id && el.type !== 'checkbox' && el.value.trim()) {
-                                const label = document.querySelector(`label[for='${el.id}']`)?.textContent || el.placeholder;
-                                summary += `${label}: ${el.value.trim()}\n`;
+                        
+                        // Get all form elements in this section
+                        section.querySelectorAll('input[type="text"], input[type="url"], input[type="number"], textarea').forEach(el => {
+                            if (el.value.trim() && el.name && el.name !== 'summary') {
+                                const fieldName = el.getAttribute('name').replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                                summary += `${fieldName}: ${el.value.trim()}\n`;
                             }
                         });
+                        
+                        // Handle social links separately
                         if (module.id === 'socials') {
-                            section.querySelectorAll('.social-link').forEach((link, index) => {
-                                if (link.value.trim()) summary += `Red Social ${index + 1}: ${link.value.trim()}\n`;
+                            const socialLinks = section.querySelectorAll('.social-link');
+                            socialLinks.forEach((link, index) => {
+                                if (link.value.trim()) {
+                                    summary += `Red Social ${index + 1}: ${link.value.trim()}\n`;
+                                }
                             });
                         }
+                        
                         summary += '\n';
                     }
                 });
+
+                // Add additional notes if provided
+                const additionalNotes = document.getElementById('additionalNotes');
+                if (additionalNotes && additionalNotes.value.trim()) {
+                    summary += '--- NOTAS ADICIONALES ---\n';
+                    summary += additionalNotes.value.trim() + '\n\n';
+                }
+                
+                summary += `--- INFORMACIÓN DEL ENVÍO ---\n`;
+                summary += `Fecha: ${new Date().toLocaleString('es-ES')}\n`;
+                summary += `Estructura: ${recommendedToggle.checked ? 'Recomendada' : 'Personalizada'}\n`;
                 
                 summaryHidden.value = summary;
 
+                // Submit form
+                const submitBtn = document.getElementById('generateSummaryBtn');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = `
+                    <span class="relative z-10 flex items-center space-x-3">
+                        <svg class="w-6 h-6 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        <span>Enviando...</span>
+                    </span>
+                `;
+                submitBtn.disabled = true;
+
                 const formData = new FormData(form);
+                
                 fetch(form.action, {
                     method: 'POST',
                     body: formData,
                     headers: { 'Accept': 'application/json' }
                 }).then(response => {
                     if (response.ok) {
+                        // Show success modal with animation
                         modal.classList.remove('hidden');
                         modal.classList.add('flex');
+                        
+                        setTimeout(() => {
+                            modalContent.classList.remove('scale-95', 'opacity-0');
+                            modalContent.classList.add('scale-100', 'opacity-100');
+                        }, 100);
+                        
+                        // Reset form
                         form.reset();
+                        socialCount = 0;
+                        document.getElementById('socials-container').innerHTML = '';
+                        document.getElementById('addSocialBtn').style.display = 'flex';
+                        document.getElementById('addSocialBtn').querySelector('span').textContent = 'Agregar Red Social';
                         applyRecommendedStructure(true);
+                        updateProgress();
                     } else {
-                        alert('Hubo un error al enviar el formulario. Por favor, inténtalo de nuevo.');
+                        throw new Error('Error en el envío');
                     }
                 }).catch(error => {
-                    alert('Hubo un error de red. Por favor, revisa tu conexión.');
+                    console.error('Error:', error);
+                    alert('Hubo un error al enviar el formulario. Por favor, inténtalo de nuevo.');
+                }).finally(() => {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
                 });
             });
             
             closeModalBtn.addEventListener('click', () => {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
+                modalContent.classList.remove('scale-100', 'opacity-100');
+                modalContent.classList.add('scale-95', 'opacity-0');
+                
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                }, 300);
             });
+
+            // Close modal when clicking backdrop
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModalBtn.click();
+                }
+            });
+
+            // Initial progress update
+            updateProgress();
         });
     </script>
 </body>
