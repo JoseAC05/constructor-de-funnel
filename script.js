@@ -15,6 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearBtn = document.getElementById('clearBtn');
     const saveProgressBtn = document.getElementById('saveProgressBtn');
 
+
+    // URL base de tu backend
+    const API_BASE_URL = "https://requalv.vercel.app/"; // cambia a tu dominio en producción
+
+
     // --- STATE MANAGEMENT ---
     let currentStep = 0;
     const TOTAL_STEPS = steps.length;
@@ -25,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- VARIABLES PARA EDICIÓN DESDE RESUMEN ---
     let isEditingFromSummary = false;
 
-    // --- ALERTAS EN PANTALLA (5500 ms) ---
+    // --- ALERTAS EN PANTALLA (5500 ms) --
     function showAlert(message, type = 'info') {
         const container = document.getElementById('appAlerts');
         if (!container) {
@@ -40,8 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
         iconSpan.classList.add('app-alert-icon');
         iconSpan.textContent =
             type === 'success' ? '✅' :
-            type === 'error'   ? '⚠️' :
-                                 'ℹ️';
+                type === 'error' ? '⚠️' :
+                    'ℹ️';
 
         const msgSpan = document.createElement('div');
         msgSpan.classList.add('app-alert-message');
@@ -820,91 +825,79 @@ document.addEventListener('DOMContentLoaded', () => {
     async function handleFormSubmit(event) {
         event.preventDefault();
 
-        if (!validateCurrentStep()) {
-            return;
-        }
+        const formData = new FormData(form);
 
-        const completedAtField = document.getElementById('formCompletedAt');
-        if (completedAtField) {
-            completedAtField.value = new Date().toISOString();
-        }
+        const payload = {
+            client_name: formData.get("client_name"),
+            client_email: formData.get("client_email"),
+            client_phone: formData.get("client_phone"),
+            client_business: formData.get("client_business"),
 
-        const originalText = submitBtn.innerHTML;
-        submitBtn.classList.add('loading');
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = `
-            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="animation: spin 1s linear infinite;">
-                <circle cx="12" cy="12" r="10" stroke-width="2"/>
-                <path d="M12 2a10 10 0 0 1 10 10" stroke-width="2"/>
-            </svg>
-            Enviando...
-        `;
+            business_type: formData.get("business_type"),
+            business_stage: formData.get("business_stage"),
+            main_product: formData.get("main_product"),
+
+            funnel_destination: formData.get("funnel_destination"),
+            traffic_source: formData.get("traffic_source"),
+            target_audience: formData.get("target_audience"),
+            unique_value: formData.get("unique_value"),
+
+            followup_method: formData.get("followup_method"),
+            welcome_email: formData.get("welcome_email"),
+            whatsapp_config: formData.get("whatsapp_config"),
+
+            hero_title: formData.get("hero_title"),
+            hero_description: formData.get("hero_description"),
+            cta_text: formData.get("cta_text"),
+            guarantee: formData.get("guarantee"),
+
+            extra_modules: formData.getAll("extra_modules[]"),
+            testimonials: JSON.parse(formData.get("testimonials_json") || "null"),
+            faq: JSON.parse(formData.get("faq_json") || "null"),
+            pricing_plans: JSON.parse(formData.get("pricing_plans_json") || "null"),
+            social_links: JSON.parse(formData.get("social_links_json") || "null"),
+
+            primary_color: formData.get("primary_color"),
+            secondary_color: formData.get("secondary_color"),
+            design_style: formData.get("design_style"),
+            fonts: formData.get("fonts"),
+
+            timeframe: formData.get("timeframe"),
+            additional_notes: formData.get("additional_notes")
+        };
 
         try {
-            const formData = new FormData(form);
-
-            const leadData = {
-                id: Date.now(),
-                created_at: new Date().toISOString(),
-                status: 'pending',
-                client_name: formData.get('client_name'),
-                client_email: formData.get('client_email'),
-                client_phone: formData.get('client_phone'),
-                client_business: formData.get('client_business'),
-                business_type: formData.get('business_type'),
-                business_stage: formData.get('business_stage'),
-                main_product: formData.get('main_product'),
-                funnel_destination: formData.get('funnel_destination'),
-                traffic_source: formData.get('traffic_source'),
-                target_audience: formData.get('target_audience'),
-                unique_value: formData.get('unique_value'),
-                followup_method: formData.get('followup_method'),
-                hero_title: formData.get('hero_title'),
-                cta_text: formData.get('cta_text'),
-                domain_option: formData.get('domain_option'),
-                design_style: formData.get('design_style'),
-                timeframe: formData.get('timeframe'),
-                priority: formData.get('priority'),
-                extra_modules: formData.getAll('extra_modules[]'),
-                languages: formData.getAll('languages[]'),
-                additional_notes: formData.get('additional_notes')
-            };
-
-            if (window.storage && typeof window.storage.set === 'function') {
-                await window.storage.set(`lead:${leadData.id}`, JSON.stringify(leadData));
-            } else {
-                console.warn('CRM local no disponible: window.storage.set no existe. Solo se enviará el formulario remoto.');
-            }
-
-            const response = await fetch(form.action, {
-                method: 'POST',
-                body: formData,
+            const response = await fetch(`${API_BASE_URL}/api/leads`, {
+                method: "POST",
                 headers: {
-                    'Accept': 'application/json'
-                }
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
             });
 
-            if (response.ok) {
-                showSuccessModal();
-                localStorage.removeItem('funnelCraftProgress');
-                setTimeout(() => {
-                    resetFormState();
-                }, 2000);
-            } else {
-                throw new Error(`Error del servidor: ${response.status}`);
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.message || "Error al enviar el formulario");
             }
+
+            const savedLead = await response.json();
+
+            // Aquí mantienes tu lógica actual de éxito:
+            // limpiar localStorage, mostrar el modal de éxito, resetear pasos, etc.
+            // ejemplo genérico:
+            // localStorage.removeItem("requalvFormData");
+            // showSuccessModal();
+
+            console.log("Lead guardado:", savedLead);
         } catch (error) {
-            console.error('Error submitting form:', error);
-            showAlert(
-                'Error al enviar el formulario: ' + error.message + '\n\nPor favor, intenta nuevamente o contacta al soporte.',
-                'error'
-            );
-        } finally {
-            submitBtn.classList.remove('loading');
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalText;
+            console.error(error);
+            alert("Hubo un error al enviar el formulario. Intenta de nuevo.");
         }
     }
+
+    // Asegúrate de tener:
+    form.addEventListener("submit", handleFormSubmit);
+
 
     function showSuccessModal() {
         if (successModal) {

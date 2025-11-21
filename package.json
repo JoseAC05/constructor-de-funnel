@@ -1,9 +1,0 @@
-{
-  "name": "constructor-de-funnel",
-  "version": "1.0.0",
-  "scripts": {
-    "dev": "vercel dev",
-    "build": "echo 'Building...'",
-    "start": "node api/leads.js"
-  }
-}

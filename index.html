@@ -20,12 +20,6 @@
     <body>
         <div id="appAlerts" class="app-alerts"></div>
 
-
-
-
-
-
-
         <!-- Progress System -->
         <div class="progress-system">
             <div id="progressFill" class="progress-fill" style="width: 0%;"></div>
@@ -1686,7 +1680,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                     </svg>
-                    Enviar
+                    Enviar Formulario
                 </button>
             </div>
         </div>
@@ -1853,6 +1847,163 @@
             </div>
         </footer>
         <script src="script.js"></script>
+
+
+
+        <script>
+            // ============ INTEGRACIÓN REQUALV-DASHBOARD ============
+            const DASHBOARD_API = 'https://requalv-api.onrender.com';
+
+            // Función para capturar el final del formulario
+            window.addEventListener('load', function () {
+                // Interceptar el botón de envío del formulario
+                const submitBtn = document.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    submitBtn.addEventListener('click', function (e) {
+                        setTimeout(() => {
+                            enviarClienteAlDashboard();
+                        }, 1000); // Esperar 1 segundo después de enviar
+                    });
+                }
+            });
+
+            async function enviarClienteAlDashboard() {
+                try {
+                    // Recopilar datos del formulario REQUALV
+                    const datosCliente = {
+                        name: document.getElementById('company-name')?.value || 'Cliente Requalv',
+                        email: document.getElementById('company-email')?.value || 'cliente@requalv.com',
+                        company: document.getElementById('company-name')?.value || '',
+                        phone: document.getElementById('company-phone')?.value || '',
+                        industry: document.getElementById('industry-select')?.value || 'Sin especificar',
+                        target_audience: {
+                            description: document.getElementById('target-audience')?.value || 'No especificado'
+                        },
+                        funnel_goal: document.getElementById('funnel-destination')?.value || 'Conversión',
+                        form_fields: extraerCamposFormulario(),
+                        modules: extraerModulosSeleccionados(),
+                        testimonials: extraerTestimonios(),
+                        social_links: extraerRedesSociales(),
+                        faq: extraerPreguntas(),
+                        urgency_enabled: !!document.getElementById('urgency-toggle')?.checked,
+                        pricing_plans: extraerPlanesPrecios(),
+                        video_url: document.getElementById('video-url')?.value || '',
+                        popup_config: extraerConfigPopup()
+                    };
+
+                    console.log('📤 Enviando cliente al dashboard:', datosCliente);
+
+                    const response = await fetch(`${DASHBOARD_API}/api/requalv/register`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(datosCliente)
+                    });
+
+                    const resultado = response.json();
+
+                    if (response.ok) {
+                        console.log('✅ Cliente registrado en dashboard:', resultado);
+                        mostrarMensajeExito('¡Excelente! Tu perfil ha sido registrado en el dashboard');
+                    } else {
+                        console.warn('⚠️ Respuesta del servidor:', resultado);
+                    }
+                } catch (error) {
+                    console.error('❌ Error al enviar datos al dashboard:', error);
+                }
+            }
+
+            // Funciones auxiliares para extraer datos
+            function extraerCamposFormulario() {
+                const campos = {};
+                document.querySelectorAll('input[type="text"], textarea, select').forEach((el, i) => {
+                    if (el.value) {
+                        campos[`campo_${i}`] = el.value;
+                    }
+                });
+                return campos;
+            }
+
+            function extraerModulosSeleccionados() {
+                const modulos = [];
+                document.querySelectorAll('input[type="checkbox"]:checked').forEach(el => {
+                    if (el.closest('[data-module]')) {
+                        modulos.push(el.nextElementSibling?.textContent || el.value);
+                    }
+                });
+                return modulos;
+            }
+
+            function extraerTestimonios() {
+                const testimonios = [];
+                document.querySelectorAll('[data-testimonial], .testimonial-item, .testimonial').forEach(el => {
+                    const texto = el.textContent;
+                    if (texto.length > 10) {
+                        testimonios.push({ text: texto.substring(0, 200) });
+                    }
+                });
+                return testimonios;
+            }
+
+            function extraerRedesSociales() {
+                return {
+                    facebook: document.querySelector('input[placeholder*="facebook"], input[name*="facebook"]')?.value || '',
+                    instagram: document.querySelector('input[placeholder*="instagram"], input[name*="instagram"]')?.value || '',
+                    twitter: document.querySelector('input[placeholder*="twitter"], input[name*="twitter"]')?.value || '',
+                    linkedin: document.querySelector('input[placeholder*="linkedin"], input[name*="linkedin"]')?.value || ''
+                };
+            }
+
+            function extraerPreguntas() {
+                const faq = [];
+                document.querySelectorAll('[data-faq], .faq-item, .question-item').forEach(el => {
+                    const q = el.querySelector('h4, .question, .faq-question')?.textContent;
+                    const a = el.querySelector('p, .answer, .faq-answer')?.textContent;
+                    if (q) faq.push({ question: q.substring(0, 100), answer: a?.substring(0, 200) || '' });
+                });
+                return faq;
+            }
+
+            function extraerPlanesPrecios() {
+                const planes = [];
+                document.querySelectorAll('[data-plan], .pricing-plan, .plan-card').forEach(el => {
+                    const nombre = el.querySelector('h3, .plan-name')?.textContent;
+                    const precio = el.querySelector('.price, .plan-price')?.textContent;
+                    if (nombre) planes.push({ name: nombre.trim(), price: precio?.trim() || 'Consultar' });
+                });
+                return planes;
+            }
+
+            function extraerConfigPopup() {
+                return {
+                    title: document.querySelector('[placeholder*="titulo"], .popup-title')?.value || 'Mi popup',
+                    message: document.querySelector('textarea[placeholder*="popup"], .popup-message')?.value || 'Mensaje',
+                    cta_text: document.querySelector('input[placeholder*="cta"], .cta-text')?.value || 'Enviar'
+                };
+            }
+
+            function mostrarMensajeExito(mensaje) {
+                const div = document.createElement('div');
+                div.innerHTML = `
+        <div style="position: fixed; top: 20px; right: 20px; background: #4caf50; color: white; 
+                    padding: 15px 20px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); z-index: 9999;">
+            ✅ ${mensaje}
+        </div>
+    `;
+                document.body.appendChild(div);
+                setTimeout(() => div.remove(), 5000);
+            }
+
+            console.log('✅ Script de integración Requalv-Dashboard cargado');
+        </script>
+
     </body>
+
+
+
+
+
 
 </html>
